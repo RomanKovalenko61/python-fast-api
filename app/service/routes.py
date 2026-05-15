@@ -1,7 +1,7 @@
-from enum import Enum
 import random
+from enum import Enum
 
-from fastapi import Path, Request, APIRouter, Depends, HTTPException
+from fastapi import Request, APIRouter, Depends
 from fastapi.params import Query
 
 from app.common.config import Settings
@@ -46,10 +46,9 @@ async def create_user(request: Request):
     data = await request.json()
     return data
 
+
 @router.get("/random")
 def get_random(query: RandQuery = Depends()):
-    if query.rnd_from > query.rnd_to:
-        raise HTTPException(400, "rnd_from должен быть меньше rnd_to")
     return {
         "value": random.randint(query.rnd_from, query.rnd_to)
     }
