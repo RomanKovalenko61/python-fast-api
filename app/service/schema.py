@@ -32,3 +32,8 @@ class UserCreateRequest(BaseModel):
         if not value.strip():
             raise HTTPException(400, "name must be non-empty string")
         return value
+
+
+class UserCreateResponse(BaseModel):
+    id: int
+    name: str

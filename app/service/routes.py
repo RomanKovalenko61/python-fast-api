@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends
 from fastapi.params import Query
 
 from app.common.config import Settings
-from service.schema import RandQuery, UserCreateRequest
+from service.schema import RandQuery, UserCreateRequest, UserCreateResponse
 
 settings = Settings()
 router = APIRouter()
@@ -46,9 +46,14 @@ def get_users(
 #     data = await request.json()
 #     return data
 
-@router.post("/users")
+@router.post("/users", response_model=UserCreateResponse)
 async def create_user(data: UserCreateRequest):
-    return data
+    # do smth
+    # return {**data.model_dump(), "id": 1}
+    return UserCreateResponse(
+        id=1,
+        name=data.name,
+    )
 
 
 @router.get("/random")
