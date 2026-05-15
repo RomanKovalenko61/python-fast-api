@@ -1,5 +1,5 @@
 from fastapi import HTTPException
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, Field, model_validator, field_validator
 
 
 class RandQuery(BaseModel):
@@ -25,3 +25,10 @@ class UserCreateRequest(BaseModel):
     name: str
     age: int
     description: str | None = None
+
+    @field_validator("name")
+    @classmethod
+    def name_not_empty(cls, value):
+        if not value.strip():
+            raise HTTPException(400, "name must be non-empty string")
+        return value
