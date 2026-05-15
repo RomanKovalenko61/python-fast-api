@@ -1,9 +1,41 @@
+import logging
+import sys
+from contextlib import asynccontextmanager
+
 import uvicorn
 from fastapi import FastAPI
 
 from app.service import routes
+from app.consumers.order_handler import start_order_consumer, stop_order_consumer
+from app.kafka.producer import get_kafka_producer, _producer_client
+from app.routers import orders
 
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Lifecycle: startup and shutdown"""
+
+    # Startup: запускаем Kafka Producer
+    await get_kafka_producer()
+
+    # Startup: запускаем Kafka Consumers
+    await start_order_consumer()
+
+    yield
+
+    # Shutdown: останавливаем Producer и Consumers
+    if _producer_client:
+        await _producer_client.stop()
+
+    await stop_order_consumer()
+
+logging.basicConfig(
+    level=logging.INFO,
+    stream=sys.stdout,
+    format="%(asctime)s - [%(levelname)s] %(name)s - %(message)s]"
+)
 app = FastAPI(
+    lifespan=lifespan,
     title="Proga API",
     description="API for ....",
     version="0.0.1",
@@ -15,6 +47,7 @@ app = FastAPI(
     ]
 )
 app.include_router(routes.router)
+app.include_router(orders.router)
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)

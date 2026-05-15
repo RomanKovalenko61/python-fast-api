@@ -25,6 +25,15 @@ class Settings(BaseSettings):
     service_name: str = Field(validation_alias="SERVICE_NAME")
     database_url: str = Field(validation_alias="DATABASE_URL")
 
+    # Kafka
+    kafka_bootstrap_servers: list[str] = ["localhost:9092"]
+    kafka_consumer_group: str = "fastapi-app"
+    kafka_auto_offset_reset: str = "earliest"  # "earliest" или "latest"
+
+    # Topics
+    orders_topic: str = "orders"
+    notifications_topic: str = "notifications"
+
     @property
     def db(self) -> DatabaseSettings:
         return DatabaseSettings(url=self.database_url)
