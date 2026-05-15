@@ -5,6 +5,7 @@ from fastapi import APIRouter, Depends
 from fastapi.params import Query
 
 from app.common.config import Settings
+from service.dependencies import ProjectServiceDeps
 from service.schema import RandQuery, UserCreateRequest, UserCreateResponse, ProjectPath
 
 settings = Settings()
@@ -63,6 +64,9 @@ def get_random(query: RandQuery = Depends()):
     }
 
 
-@router.get("/projects/{project_id}")
-def get_project(path: ProjectPath = Depends()):
-    return {"id": path.project_id}
+@router.get("/projects/{project_id}", description="""
+    Получает проект по его id, если проекта нет возвращает ошибку
+            """)
+def get_project(service: ProjectServiceDeps, path: ProjectPath = Depends()):
+    res = service.get_project(path.project_id)
+    return {"id": res}

@@ -3,7 +3,17 @@ from fastapi import FastAPI
 
 from service import routes
 
-app = FastAPI()
+app = FastAPI(
+    title="Proga API",
+    description="API for ....",
+    version="0.0.1",
+    openapi_tags=[
+        {
+            "name": "Projects ...",
+            "description": "Descrpt ..."
+        }
+    ]
+)
 app.include_router(routes.router)
 
 if __name__ == "__main__":
