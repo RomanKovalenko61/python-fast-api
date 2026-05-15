@@ -19,3 +19,9 @@ class RandQuery(BaseModel):
     # @model_validator(mode="wrap")
     # def check_from_to3(cls, data, handler):
     #     ...
+
+
+class UserCreateRequest(BaseModel):
+    name: str
+    age: int
+    description: str | None = None

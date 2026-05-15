@@ -1,11 +1,11 @@
 import random
 from enum import Enum
 
-from fastapi import Request, APIRouter, Depends
+from fastapi import APIRouter, Depends
 from fastapi.params import Query
 
 from app.common.config import Settings
-from service.schema import RandQuery
+from service.schema import RandQuery, UserCreateRequest
 
 settings = Settings()
 router = APIRouter()
@@ -41,9 +41,13 @@ def get_users(
 # def create_user(body: dict = Body()):
 #     return body
 
+# @router.post("/users")
+# async def create_user(request: Request):
+#     data = await request.json()
+#     return data
+
 @router.post("/users")
-async def create_user(request: Request):
-    data = await request.json()
+async def create_user(data: UserCreateRequest):
     return data
 
 
