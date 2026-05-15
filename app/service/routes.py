@@ -1,9 +1,11 @@
 from enum import Enum
+import random
 
-from fastapi import Path, Request, APIRouter
+from fastapi import Path, Request, APIRouter, Depends, HTTPException
 from fastapi.params import Query
 
 from app.common.config import Settings
+from service.schema import RandQuery
 
 settings = Settings()
 router = APIRouter()
@@ -21,9 +23,9 @@ def root():
             "database": settings.db.url}
 
 
-@router.get("/{user_id}")
-def user(user_id: int = Path(ge=5)):
-    return {"user_id": user_id}
+# @router.get("/{user_id}")
+# def user(user_id: int = Path(ge=5)):
+#     return {"user_id": user_id}
 
 
 @router.get("/users/")
@@ -43,3 +45,11 @@ def get_users(
 async def create_user(request: Request):
     data = await request.json()
     return data
+
+@router.get("/random")
+def get_random(query: RandQuery = Depends()):
+    if query.rnd_from > query.rnd_to:
+        raise HTTPException(400, "rnd_from должен быть меньше rnd_to")
+    return {
+        "value": random.randint(query.rnd_from, query.rnd_to)
+    }
