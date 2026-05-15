@@ -5,8 +5,8 @@ from fastapi import APIRouter, Depends
 from fastapi.params import Query
 
 from app.common.config import Settings
-from service.dependencies import ProjectServiceDeps
-from service.schema import RandQuery, UserCreateRequest, UserCreateResponse, ProjectPath
+from app.service.dependencies import ProjectServiceDeps
+from app.service.schema import RandQuery, UserCreateRequest, UserCreateResponse, ProjectPath
 
 settings = Settings()
 router = APIRouter()

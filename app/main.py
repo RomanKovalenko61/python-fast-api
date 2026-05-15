@@ -1,7 +1,7 @@
 import uvicorn
 from fastapi import FastAPI
 
-from service import routes
+from app.service import routes
 
 app = FastAPI(
     title="Proga API",
