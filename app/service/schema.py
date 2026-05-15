@@ -26,6 +26,13 @@ class UserCreateRequest(BaseModel):
     age: int
     description: str | None = None
 
+    # by_default "extra": "ignore"
+    # "extra": "forbit"
+    # "extra": "allow"
+    model_config = {
+        "extra": "forbit"
+    }
+
     @field_validator("name")
     @classmethod
     def name_not_empty(cls, value):
