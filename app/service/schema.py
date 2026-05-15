@@ -27,10 +27,10 @@ class UserCreateRequest(BaseModel):
     description: str | None = None
 
     # by_default "extra": "ignore"
-    # "extra": "forbit"
+    # "extra": "forbid"
     # "extra": "allow"
     model_config = {
-        "extra": "forbit"
+        "extra": "ignore"
     }
 
     @field_validator("name")
@@ -44,3 +44,7 @@ class UserCreateRequest(BaseModel):
 class UserCreateResponse(BaseModel):
     id: int
     name: str
+
+
+class ProjectPath(BaseModel):
+    project_id: int = Field(gt=0)

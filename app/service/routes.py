@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends
 from fastapi.params import Query
 
 from app.common.config import Settings
-from service.schema import RandQuery, UserCreateRequest, UserCreateResponse
+from service.schema import RandQuery, UserCreateRequest, UserCreateResponse, ProjectPath
 
 settings = Settings()
 router = APIRouter()
@@ -61,3 +61,8 @@ def get_random(query: RandQuery = Depends()):
     return {
         "value": random.randint(query.rnd_from, query.rnd_to)
     }
+
+
+@router.get("/projects/{project_id}")
+def get_project(path: ProjectPath = Depends()):
+    return {"id": path.project_id}
