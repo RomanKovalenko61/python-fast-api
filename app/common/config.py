@@ -5,6 +5,10 @@ from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
+class AppSettings(BaseSettings):
+    name: str
+
+
 class DatabaseSettings(BaseSettings):
     url: str
 
@@ -24,6 +28,10 @@ class Settings(BaseSettings):
     @property
     def db(self) -> DatabaseSettings:
         return DatabaseSettings(url=self.database_url)
+
+    @property
+    def app(self) -> AppSettings:
+        return AppSettings(name=self.service_name)
 
 
 def get_settings() -> Settings:
