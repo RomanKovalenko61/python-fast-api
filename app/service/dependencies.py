@@ -2,8 +2,10 @@ from typing import Annotated
 
 from fastapi import Depends
 
+from service.db import DbSessionDeps
 
-def get_project_repository():
+
+def get_project_repository(db: DbSessionDeps):
     print("get_project_repository")
     return ProjectRepository()
 
