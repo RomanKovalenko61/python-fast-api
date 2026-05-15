@@ -9,7 +9,7 @@ from app.service import routes
 from app.consumers.order_handler import start_order_consumer, stop_order_consumer
 from app.kafka.producer import get_kafka_producer, _producer_client
 from app.routers import orders
-
+from common.config import Settings
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -29,25 +29,31 @@ async def lifespan(app: FastAPI):
 
     await stop_order_consumer()
 
-logging.basicConfig(
-    level=logging.INFO,
-    stream=sys.stdout,
-    format="%(asctime)s - [%(levelname)s] %(name)s - %(message)s]"
-)
-app = FastAPI(
-    lifespan=lifespan,
-    title="Proga API",
-    description="API for ....",
-    version="0.0.1",
-    openapi_tags=[
-        {
-            "name": "Projects ...",
-            "description": "Descrpt ..."
-        }
-    ]
-)
-app.include_router(routes.router)
-app.include_router(orders.router)
+def create_app() -> FastAPI:
+    logging.basicConfig(
+        level=logging.INFO,
+        stream=sys.stdout,
+        format="%(asctime)s - [%(levelname)s] %(name)s - %(message)s]"
+    )
+    settings = Settings()
+    new_app = FastAPI(
+        lifespan=lifespan,
+        title=settings.app.name,
+        description="API for ....",
+        version="0.0.1",
+        openapi_tags=[
+            {
+                "name": "Projects ...",
+                "description": "Descrpt ..."
+            }
+        ])
+
+    new_app.state.settings = settings
+    new_app.include_router(routes.router)
+    new_app.include_router(orders.router)
+    return new_app
+
+app = create_app()
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
