@@ -3,6 +3,7 @@ from typing import AsyncGenerator, Annotated
 from fastapi import Depends
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
+from sqlalchemy.orm import DeclarativeBase
 
 from app.common.config import Settings
 
@@ -34,3 +35,6 @@ DBSessionDebs = Annotated[
     AsyncSession,
     Depends(get_session)
 ]
+
+class Base(DeclarativeBase):
+    pass
