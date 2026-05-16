@@ -8,7 +8,7 @@ from fastapi.params import Query
 
 from app.common.config import Settings
 from app.common.db import check_db, DBSessionDebs
-from app.service.dependencies import ProjectServiceDeps
+from app.service.service import ProjectServiceDeps
 from app.service.schema import RandQuery, UserCreateRequest, UserCreateResponse, ProjectPath
 
 settings = Settings()
@@ -24,8 +24,8 @@ class SortOrder(str, Enum):
 
 @router.get("/")
 async def root(session: DBSessionDebs):
-    data = await check_db(session)
-    logger.info("DB check: %s", data)
+    # data = await check_db(session)
+    # logger.info("DB check: %s", data)
     return {"message": "I'm alive!",
             "service": settings.service_name,
             "database": settings.db.url}
@@ -74,6 +74,7 @@ def get_random(query: RandQuery = Depends()):
 @router.get("/projects/{project_id}", description="""
     Получает проект по его id, если проекта нет возвращает ошибку
             """)
-def get_project(service: ProjectServiceDeps, path: ProjectPath = Depends()):
-    res = service.get_project(path.project_id)
+async def get_project(service: ProjectServiceDeps, path: ProjectPath = Depends()):
+    res = service.get(path.project_id)
+    # await service.create() # только для однократного вызова, не хочу создавать post
     return {"id": res}
