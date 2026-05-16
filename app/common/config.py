@@ -24,6 +24,7 @@ class Settings(BaseSettings):
 
     service_name: str = Field(validation_alias="SERVICE_NAME")
     database_url: str = Field(validation_alias="DATABASE_URL")
+    database_url_sync: str
 
     # Kafka
     kafka_bootstrap_servers: list[str] = ["localhost:9092"]
