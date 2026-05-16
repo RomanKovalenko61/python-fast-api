@@ -7,9 +7,9 @@ from fastapi import APIRouter, Depends
 from fastapi.params import Query
 
 from app.common.config import Settings
+from app.common.db import check_db, DBSessionDebs
 from app.service.dependencies import ProjectServiceDeps
 from app.service.schema import RandQuery, UserCreateRequest, UserCreateResponse, ProjectPath
-from app.common.db import check_db
 
 settings = Settings()
 router = APIRouter()
@@ -23,8 +23,8 @@ class SortOrder(str, Enum):
 
 
 @router.get("/")
-async def root():
-    data = await check_db()
+async def root(session: DBSessionDebs):
+    data = await check_db(session)
     logger.info("DB check: %s", data)
     return {"message": "I'm alive!",
             "service": settings.service_name,
