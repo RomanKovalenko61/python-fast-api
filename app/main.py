@@ -9,7 +9,7 @@ from app.service import routes
 from app.consumers.order_handler import start_order_consumer, stop_order_consumer
 from app.kafka.producer import get_kafka_producer, _producer_client
 from app.routers import orders
-from common.config import Settings
+from app.common.config import Settings
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
