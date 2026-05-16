@@ -1,5 +1,7 @@
+import logging
 import random
 from enum import Enum
+from venv import logger
 
 from fastapi import APIRouter, Depends
 from fastapi.params import Query
@@ -7,9 +9,12 @@ from fastapi.params import Query
 from app.common.config import Settings
 from app.service.dependencies import ProjectServiceDeps
 from app.service.schema import RandQuery, UserCreateRequest, UserCreateResponse, ProjectPath
+from app.common.db import check_db
 
 settings = Settings()
 router = APIRouter()
+
+logger = logging.getLogger(__name__)
 
 
 class SortOrder(str, Enum):
@@ -18,7 +23,9 @@ class SortOrder(str, Enum):
 
 
 @router.get("/")
-def root():
+async def root():
+    data = await check_db()
+    logger.info("DB check: %s", data)
     return {"message": "I'm alive!",
             "service": settings.service_name,
             "database": settings.db.url}
